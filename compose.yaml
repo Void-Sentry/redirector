@@ -1,0 +1,22 @@
+services:
+  redirector:
+    image: node:lts-alpine
+    working_dir: /app
+    entrypoint: npm run start:dev
+    depends_on:
+      - cache
+      - roach1
+      - roach2
+      - roach3
+      - rabbitmq1
+      - rabbitmq2
+      - rabbitmq3
+    env_file:
+      - .env
+    networks:
+      - usnet
+      - busnet
+      - dbnet1
+      - cachenet
+    volumes:
+      - ./:/app
