@@ -11,12 +11,18 @@ services:
       - rabbitmq1
       - rabbitmq2
       - rabbitmq3
-    env_file:
-      - .env
+    environment:
+      - HOST="0.0.0.0"
+      - PORT=3000
+
+      - BUS_HOST="rabbit-lb"
+      - BUS_PORT=5672
+      - BUS_USER="admin"
+      - BUS_PASS="admin"
+      - BUS_QUEUE="redirector_queue"
     networks:
       - usnet
       - busnet
-      - dbnet1
       - cachenet
     volumes:
       - ./:/app
