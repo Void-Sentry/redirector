@@ -3,6 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientRMQ } from '@nestjs/microservices';
 import { CacheService } from './cache.service';
 import { Request, Response } from 'express';
+import { lookup } from 'geoip-lite';
 
 @ApiTags('URL Shortener')
 @Controller()
@@ -32,9 +33,10 @@ export class AppController {
       return res.status(404).send('Shortened URL not found');
 
     const userAgent = req.headers['user-agent'];
-    const ip = req.headers['X-Forwarded-For'] || req.ip;
+    const ip = (process.env.FAKE_IP || req.headers['X-Forwarded-For'] || req.ip) as string;
+    const { country } = lookup(ip);
 
-    this.shortenerClient.emit('URL_CLICKED', { originalUrl, code, ip, userAgent });
+    this.shortenerClient.emit('URL_CLICKED', { originalUrl, code, ip, userAgent, country });
     res.redirect(originalUrl);
   }
 }
