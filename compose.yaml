@@ -18,6 +18,9 @@ services:
       - BUS_USER=admin
       - BUS_PASS=admin
       - BUS_QUEUE=redirector_queue
+
+      - CACHE_URL=redis://cache:6379
+
       - FAKE_IP=43.61.224.46
     networks:
       - usnet
