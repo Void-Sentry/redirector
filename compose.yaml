@@ -10,14 +10,15 @@ services:
       - rabbitmq2
       - rabbitmq3
     environment:
-      - HOST="0.0.0.0"
+      - HOST=0.0.0.0
       - PORT=3000
 
-      - BUS_HOST="rabbit-lb"
+      - BUS_HOST=rabbit-lb
       - BUS_PORT=5672
-      - BUS_USER="admin"
-      - BUS_PASS="admin"
-      - BUS_QUEUE="redirector_queue"
+      - BUS_USER=admin
+      - BUS_PASS=admin
+      - BUS_QUEUE=redirector_queue
+      - FAKE_IP=43.61.224.46
     networks:
       - usnet
       - busnet

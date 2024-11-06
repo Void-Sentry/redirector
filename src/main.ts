@@ -13,7 +13,7 @@ const logger: Logger = createLogger({
   format: format.json(),
   transports: [
     new DailyRotateFile({
-      filename: '/shortener/logs/shortener-%DATE%.log',
+      filename: '/redirector/logs/redirector-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
       maxSize: '20m',
@@ -54,7 +54,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('short/api', app, document);
+  SwaggerModule.setup('redirect/api', app, document);
 
   await app.startAllMicroservices();
   await app.listen({ host: '0.0.0.0', port: +process.env.PORT });
