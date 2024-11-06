@@ -19,6 +19,8 @@ WORKDIR /bundle
 COPY --chown=node:node --chmod=500 --from=builder /build/node_modules    node_modules
 COPY --chown=node:node --chmod=500 --from=builder /build/dist            dist
 
+RUN mkdir -p /redirector/logs && chown node:node -R /redirector
+
 EXPOSE 3000
 
 USER node

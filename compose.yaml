@@ -1,8 +1,6 @@
 services:
   redirector:
-    image: node:lts-alpine
-    working_dir: /app
-    entrypoint: npm run start:dev
+    image: redirector:latest
     depends_on:
       - cache
       - roach1
@@ -25,4 +23,4 @@ services:
       - busnet
       - cachenet
     volumes:
-      - ./:/app
+      - redirectorLogging:/redirector/logs
