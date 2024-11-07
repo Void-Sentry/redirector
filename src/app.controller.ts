@@ -26,11 +26,13 @@ export class AppController {
   })
   @Get(':code')
   async redirect(@Param('code') code: string, @Req() req: Request, @Res() res: Response) {
-    const originalUrl = await this.cacheService.client.get('code');
+    const originalUrl = await this.cacheService.client.get(code);
 
     // Handle the case where the original URL is not found.
     if (!originalUrl)
       return res.status(404).send('Shortened URL not found');
+
+    await this.cacheService.client.expire(code, 86400);
 
     const userAgent = req.headers['user-agent'];
     const ip = (process.env.FAKE_IP || req.headers['X-Forwarded-For'] || req.ip) as string;

@@ -8,6 +8,6 @@ export class AppHandler {
 
     @MessagePattern('URL_GENERATED')
     urlCreatedHandler(@Payload() data: { originalUrl: string, code: string }) {
-        this.cacheService.client.set(data.code, data.originalUrl);
+        this.cacheService.client.set(data.code, data.originalUrl, { EX: 86400 });
     }
 }
