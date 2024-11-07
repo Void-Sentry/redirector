@@ -21,6 +21,7 @@ export class CacheService implements OnModuleInit {
 
     readonly onModuleInit = async () => {
         await this.#subscriberClient.connect();
+        await this.client.connect();
         await this.#subscriberClient.configSet('notify-keyspace-events', 'Ex');
         await this.#subscriberClient.pSubscribe('__keyevent@0__:expired', (err, _) => {
             if (err) throw err;
