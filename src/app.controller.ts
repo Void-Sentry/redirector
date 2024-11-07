@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, Req, Res } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Param, Req, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientRMQ } from '@nestjs/microservices';
 import { CacheService } from './cache.service';
@@ -17,11 +17,11 @@ export class AppController {
   @ApiOperation({ summary: 'List user shortened URLs' })
   @ApiOperation({ summary: 'Redirect to original URL by shortened code' })
   @ApiResponse({
-    status: 302,
+    status: HttpStatus.FOUND,
     description: 'Redirects to the original URL associated with the shortened code.',
   })
   @ApiResponse({
-    status: 404,
+    status: HttpStatus.NOT_FOUND,
     description: 'The shortened URL code does not exist or is invalid.',
   })
   @Get(':code')
@@ -39,6 +39,7 @@ export class AppController {
     const { country } = lookup(ip);
 
     this.shortenerClient.emit('URL_CLICKED', { originalUrl, code, ip, userAgent, country });
-    res.redirect(originalUrl);
+
+    return res.redirect(HttpStatus.FOUND, originalUrl);
   }
 }
