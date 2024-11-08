@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redirector
+  labels:
+    app: redirector
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redirector
+  template:
+    metadata:
+      labels:
+        app: redirector
+    spec:
+      containers:
+        - name: redirector
+          image: redirector:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: 3000
+            - name: BUS_HOST
+              value: rabbit-lb
+            - name: BUS_PORT
+              value: 5672
+            - name: BUS_USER
+              value: admin
+            - name: BUS_PASS
+              value: admin
+            - name: BUS_QUEUE
+              value: redirector_queue
+            - name: CACHE_URL
+              value: redis://cache:6379
+            - name: FAKE_IP
+              value: 43.61.224.46
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
