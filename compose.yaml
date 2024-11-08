@@ -1,8 +1,6 @@
 services:
   redirector:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: redirector:latest
     depends_on:
       - cache
       - roach1
