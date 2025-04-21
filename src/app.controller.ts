@@ -4,6 +4,7 @@ import { ClientRMQ } from '@nestjs/microservices';
 import { CacheService } from './cache.service';
 import { Request, Response } from 'express';
 import { lookup } from 'geoip-lite';
+import { ConfigService } from './config.service';
 
 @ApiTags('URL Shortener')
 @Controller()
@@ -12,6 +13,7 @@ export class AppController {
     @Inject('SHORTENER_CLIENT')
     private readonly shortenerClient: ClientRMQ,
     private readonly cacheService: CacheService,
+    private readonly configService: ConfigService,
   ) {}
 
   @ApiOperation({ summary: 'List user shortened URLs' })
@@ -35,7 +37,7 @@ export class AppController {
     await this.cacheService.client.expire(code, 86400);
 
     const userAgent = req.headers['user-agent'];
-    const ip = (process.env.FAKE_IP || req.headers['X-Forwarded-For'] || req.ip) as string;
+    const ip = (this.configService.get('FAKE_IP') || req.headers['X-Forwarded-For'] || req.ip) as string;
     const { country } = lookup(ip);
 
     this.shortenerClient.emit('URL_CLICKED', { originalUrl, code, ip, userAgent, country });

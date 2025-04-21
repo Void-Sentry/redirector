@@ -1,6 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { RedisClientType, createClient } from 'redis';
 import { ClientRMQ } from '@nestjs/microservices';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class CacheService implements OnModuleInit {
@@ -10,12 +11,15 @@ export class CacheService implements OnModuleInit {
     constructor(
         @Inject('SHORTENER_CLIENT')
         private readonly shortenerClient: ClientRMQ,
+        private readonly configService: ConfigService,
     ) {
         this.client = createClient({
-            url: process.env.CACHE_URL,
+            // url: process.env.CACHE_URL,
+            url: this.configService.get('CACHE_URL'),
         });
         this.#subscriberClient = createClient({
-            url: process.env.CACHE_URL,
+            // url: process.env.CACHE_URL,
+            url: this.configService.get('CACHE_URL'),
         });
     }
 
