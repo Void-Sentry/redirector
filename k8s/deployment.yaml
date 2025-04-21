@@ -11,9 +11,19 @@ spec:
       app: redirector
   template:
     metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "redirector"
+        vault.hashicorp.com/agent-inject-secret-redirector-config: "secret/data/redirector/config"
+        # vault.hashicorp.com/agent-inject-template-redirector-config: |
+        #   {{- with secret "secret/data/redirector/config" -}}
+        #   export REDIRECTOR_CONFIG="{{ .Data.data.config }}"
+        #   {{- end -}}
+        vault.hashicorp.com/agent-inject-signal: "SIGHUP"
       labels:
         app: redirector
     spec:
+      serviceAccountName: redirector-sa
       containers:
         - name: redirector
           image: redirector:latest
